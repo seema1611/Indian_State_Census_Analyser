@@ -9,10 +9,9 @@ namespace CensusAnalyserProblemTest
     public class CensusAnalyserTest
     {
         CensusAnalyser censusAnalyser;
-        string indianCensusDataHeaders = "State,Population,AreaInSqKm,DensityPerSqKm";
-        string indianStateCodeHeader = "SrNo,State Name,TIN,StateCode";
 
         //Indian State Data
+        string indianCensusDataHeaders = "State,Population,AreaInSqKm,DensityPerSqKm";
         string csvFilePath = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCensusData.csv";
         string invalidCsvFilePath = @"D:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCensusData.csv";
         string nonCSVFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCensusData.cs";
@@ -20,6 +19,7 @@ namespace CensusAnalyserProblemTest
         string wrongHeaderFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IncorrectHeaders.csv";
 
         //Indian State Code
+        string indianStateCodeHeader = "SrNo,State Name,TIN,StateCode";
         string indianStateCodeFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCode.csv";
         string wrongIndianStateCodeFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\InCorrectIndiaStateCode.csv";
         string wrongStateCodeHeaderFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\InCorrectCodeHeaders.csv";
