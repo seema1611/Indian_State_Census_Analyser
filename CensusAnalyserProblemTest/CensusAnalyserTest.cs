@@ -79,5 +79,13 @@ namespace CensusAnalyserProblemTest
             IEnumerable<string> indianStateCodeRecord = censusAnalyser.loadCSVFileData(indianStateCodeHeader, indianStateCodeFile);
             Assert.AreEqual(37, indianStateCodeRecord.Count());
         }
+
+        //TC-2.2
+        [Test]
+        public void givenIndianStateCodeCSVFile_WhenFileNotExist_ShouldThrowFileNotFoundException()
+        {
+            var error = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.loadCSVFileData(indianStateCodeHeader, invalidCsvFilePath));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, error.type);
+        }
     }
 }
