@@ -87,5 +87,13 @@ namespace CensusAnalyserProblemTest
             var error = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.loadCSVFileData(indianStateCodeHeader, invalidCsvFilePath));
             Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, error.type);
         }
+
+        //TC-2.3
+        [Test]
+        public void givenIndianStateCodeCSVFile_WhenFileFormatIsIncorrect_ShouldThrowIncorrectFileFormatException()
+        {
+            var error = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.loadCSVFileData(indianStateCodeHeader, nonCSVFile));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_FILE_FORMAT, error.type);
+        }
     }
 }
