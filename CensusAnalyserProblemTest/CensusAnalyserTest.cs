@@ -18,7 +18,7 @@ namespace CensusAnalyserProblemTest
         static string wrongDelemeterFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\InCorrectDelimeters.csv";
         static string wrongHeaderFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IncorrectHeaders.csv";
         static string SortedindiaStateCensusData = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\SortedindiaStateCensusData.csv";
-       
+
         //Indian State Code
         static string indianStateCodeHeader = "SrNo,State Name,TIN,StateCode";
         static string indianStateCodeFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCode.csv";
@@ -151,14 +151,25 @@ namespace CensusAnalyserProblemTest
         //UC-3
         //TC-3.1
         [Test]
-        public void givenCSVDatatoSort_ShouldReturnSortedDataInJsonFormat()
+        public void givenCSVData_WhenSort_ShouldReturnSortedDataInJsonFormat()
         {
             cSVBuilderFactory = new CSVBuilderFactory();
             CensusAnalyser counte = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", csvFilePath, indianCensusDataHeaders);
             censusAnalyser = new CensusAnalyser(csvFilePath, indianCensusDataHeaders);
-            string sorted = censusAnalyser.sortingCSVData(csvFilePath, SortedindiaStateCensusData).ToString();
+            string sorted = censusAnalyser.sortingCSVData(csvFilePath, SortedindiaStateCensusData, 0).ToString();
             string[] sortatedData = JsonConvert.DeserializeObject<string[]>(sorted);
             Assert.AreEqual("Andhra Pradesh,49386799,162968,303", sortatedData[0]);
+        }
+
+        [Test]
+        public void givenCSVData_WhenSortByStateCode_ShouldReturnSortedDataInJsonFormat()
+        {
+            cSVBuilderFactory = new CSVBuilderFactory();
+            CensusAnalyser counte = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", csvFilePath, indianCensusDataHeaders);
+            censusAnalyser = new CensusAnalyser(csvFilePath, indianCensusDataHeaders);
+            string sorted = censusAnalyser.sortingCSVData(indianStateCodeFile, SortedindiaStateCensusData, 3).ToString();
+            string[] sortatedData = JsonConvert.DeserializeObject<string[]>(sorted);
+            Assert.AreEqual("3,Andhra Pradesh New,37,AD", sortatedData[0]);
         }
     }
 }
