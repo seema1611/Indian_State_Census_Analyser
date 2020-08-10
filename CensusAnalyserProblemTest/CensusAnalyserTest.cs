@@ -1,4 +1,5 @@
 using CensusAnalyserProblem;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +11,18 @@ namespace CensusAnalyserProblemTest
     {
 
         //Indian State Data
-        string indianCensusDataHeaders = "State,Population,AreaInSqKm,DensityPerSqKm";
-        string csvFilePath = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCensusData.csv";
-        string invalidCsvFilePath = @"D:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCensusData.csv";
-        string nonCSVFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCensusData.cs";
-        string wrongDelemeterFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\InCorrectDelimeters.csv";
-        string wrongHeaderFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IncorrectHeaders.csv";
-
+        static string indianCensusDataHeaders = "State,Population,AreaInSqKm,DensityPerSqKm";
+        static string csvFilePath = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCensusData.csv";
+        static string invalidCsvFilePath = @"D:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCensusData.csv";
+        static string nonCSVFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCensusData.cs";
+        static string wrongDelemeterFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\InCorrectDelimeters.csv";
+        static string wrongHeaderFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IncorrectHeaders.csv";
+        static string SortedindiaStateCensusData = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\SortedindiaStateCensusData.csv";
+       
         //Indian State Code
-        string indianStateCodeHeader = "SrNo,State Name,TIN,StateCode";
-        string indianStateCodeFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCode.csv";
-        string wrongIndianStateCodeFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\InCorrectIndiaStateCode.csv";
+        static string indianStateCodeHeader = "SrNo,State Name,TIN,StateCode";
+        static string indianStateCodeFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCode.csv";
+        static string wrongIndianStateCodeFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\InCorrectIndiaStateCode.csv";
 
         CensusAnalyser censusAnalyser;
         CSVBuilderFactory cSVBuilderFactory;
@@ -144,6 +146,19 @@ namespace CensusAnalyserProblemTest
             CSVData count = new CSVData(counte.loadCSVFileData);
             var countt = Assert.Throws<CensusAnalyserException>(() => count());
             Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_HEADER, countt.type);
+        }
+
+        //UC-3
+        //TC-3.1
+        [Test]
+        public void givenCSVDatatoSort_ShouldReturnSortedDataInJsonFormat()
+        {
+            cSVBuilderFactory = new CSVBuilderFactory();
+            CensusAnalyser counte = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", csvFilePath, indianCensusDataHeaders);
+            censusAnalyser = new CensusAnalyser(csvFilePath, indianCensusDataHeaders);
+            string sorted = censusAnalyser.sortingCSVData(csvFilePath, SortedindiaStateCensusData).ToString();
+            string[] sortatedData = JsonConvert.DeserializeObject<string[]>(sorted);
+            Assert.AreEqual("Andhra Pradesh,49386799,162968,303", sortatedData[0]);
         }
     }
 }

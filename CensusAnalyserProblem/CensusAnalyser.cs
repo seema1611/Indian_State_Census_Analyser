@@ -1,4 +1,5 @@
 ﻿using CensusAnalyzerProblem;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,7 +31,9 @@ namespace CensusAnalyserProblem
             {
                 throw new CensusAnalyserException("File Not Found", CensusAnalyserException.ExceptionType.FILE_NOT_FOUND);
             }
-            csvFileData = File.ReadAllLines(csvFilePath);
+
+            string[] csvFileData = File.ReadAllLines(csvFilePath);
+            List<string> list = csvFileData.ToList();
             if (csvFileData[0] != headers)
             {
                 throw new CensusAnalyserException("Incorrect Headers", CensusAnalyserException.ExceptionType.INCORRECT_HEADER);
@@ -43,6 +46,20 @@ namespace CensusAnalyserProblem
                 }
             }
             return csvFileData.Skip(1).ToList();
+        }
+
+        public string sortingCSVData(string csvFilePath, string newPath)
+        {
+            string[] csvFileData = File.ReadAllLines(csvFilePath);
+            var details = csvFileData.Skip(1);
+            IEnumerable<string> query =
+            from line in details
+            let x = line.Split(',')
+            orderby x[0]
+            select line;
+            File.WriteAllLines(newPath, csvFileData.Take(1).Concat(query.ToArray()));
+            List<string> sorted = query.ToList<string>();
+            return JsonConvert.SerializeObject(sorted);
         }
     }
 }
