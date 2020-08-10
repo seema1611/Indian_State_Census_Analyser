@@ -14,7 +14,7 @@ namespace CensusAnalyserProblem
         string csvFilePath;
         string headers;
         int count = 0;
-        Dictionary<int, string> dataDictionary = new Dictionary<int, string>();
+        public Dictionary<int, string> dataDictionary;
 
         public CensusAnalyser(string csvFilePath, string headers)
         {
@@ -24,6 +24,7 @@ namespace CensusAnalyserProblem
 
         public object loadCSVFileData()
         {
+            dataDictionary = new Dictionary<int, string>();
             if (Path.GetExtension(csvFilePath) != ".csv")
             {
                 throw new CensusAnalyserException("Incorrect File Format", CensusAnalyserException.ExceptionType.INCORRECT_FILE_FORMAT);
