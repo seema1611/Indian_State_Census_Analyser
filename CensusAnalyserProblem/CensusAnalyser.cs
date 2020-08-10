@@ -42,11 +42,7 @@ namespace CensusAnalyserProblem
                     throw new CensusAnalyserException("File Contains Wrong Delimiter", CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER);
                 }
             }
-            for (int i = 0; i < csvFileData.Length; i++)
-            {
-                count++;
-            }
-            return count - 1;
+            return csvFileData.Skip(1).ToList();
         }
     }
 }

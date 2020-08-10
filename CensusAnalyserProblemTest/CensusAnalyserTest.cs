@@ -8,7 +8,6 @@ namespace CensusAnalyserProblemTest
 {
     public class CensusAnalyserTest
     {
-        CensusAnalyser censusAnalyser;
 
         //Indian State Data
         string indianCensusDataHeaders = "State,Population,AreaInSqKm,DensityPerSqKm";
@@ -23,6 +22,10 @@ namespace CensusAnalyserProblemTest
         string indianStateCodeFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCode.csv";
         string wrongIndianStateCodeFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\InCorrectIndiaStateCode.csv";
 
+        CensusAnalyser censusAnalyser;
+        CSVBuilderFactory cSVBuilderFactory;
+        List<string> list = new List<string>();
+
         [SetUp]
         public void Setup()
         {
@@ -34,18 +37,18 @@ namespace CensusAnalyserProblemTest
         [Test]
         public void givenIndianCensusCSVFile_WhenFileExist_ShouldReturnsTotalNumberOfRecords()
         {
-            CSVBuilderFactory cSVBuilderFactory = new CSVBuilderFactory();
+            cSVBuilderFactory = new CSVBuilderFactory();
             CensusAnalyser counte = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", csvFilePath, indianCensusDataHeaders);
             CSVData count = new CSVData(counte.loadCSVFileData);
-            int c = (int)count();
-            Assert.AreEqual(c, 29);
+            list = (List<string>)count();
+            Assert.AreEqual(29, list.Count);
         }
 
         //TC-1.2
         [Test]
         public void givenIndianCensusCSVFile_WhenFileNotExist_ShouldThrowFileNotFoundException()
         {
-            CSVBuilderFactory cSVBuilderFactory = new CSVBuilderFactory();
+            cSVBuilderFactory = new CSVBuilderFactory();
             CensusAnalyser counte = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", invalidCsvFilePath, indianCensusDataHeaders);
             CSVData count = new CSVData(counte.loadCSVFileData);
             var countt = Assert.Throws<CensusAnalyserException>(() => count());
@@ -57,7 +60,7 @@ namespace CensusAnalyserProblemTest
         [Test]
         public void givenIndianCensusCSVFile_WhenFileFormatIsIncorrect_ShouldThrowIncorrectFileFormatException()
         {
-            CSVBuilderFactory cSVBuilderFactory = new CSVBuilderFactory();
+            cSVBuilderFactory = new CSVBuilderFactory();
             CensusAnalyser counte = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", nonCSVFile, indianCensusDataHeaders);
             CSVData count = new CSVData(counte.loadCSVFileData);
             var countt = Assert.Throws<CensusAnalyserException>(() => count());
@@ -68,7 +71,7 @@ namespace CensusAnalyserProblemTest
         [Test]
         public void givenIndianCensusCSVFile_WhenFileFormatIsCorrectButDelimeterIsWrong_ShouldThrowIncorrectDelimeterException()
         {
-            CSVBuilderFactory cSVBuilderFactory = new CSVBuilderFactory();
+            cSVBuilderFactory = new CSVBuilderFactory();
             CensusAnalyser counte = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", wrongDelemeterFile, indianCensusDataHeaders);
             CSVData count = new CSVData(counte.loadCSVFileData);
             var countt = Assert.Throws<CensusAnalyserException>(() => count());
@@ -79,7 +82,7 @@ namespace CensusAnalyserProblemTest
         [Test]
         public void givenIndianCensusCSVFile_WhenFileFormatIsCorrectButHeaderIsIncorrect_ShouldThrowIncorrectHeaderException()
         {
-            CSVBuilderFactory cSVBuilderFactory = new CSVBuilderFactory();
+            cSVBuilderFactory = new CSVBuilderFactory();
             CensusAnalyser counte = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", wrongHeaderFile, indianCensusDataHeaders);
             CSVData count = new CSVData(counte.loadCSVFileData);
             var countt = Assert.Throws<CensusAnalyserException>(() => count());
@@ -92,18 +95,18 @@ namespace CensusAnalyserProblemTest
         [Test]
         public void givenIndianStateCodeCSVFile_WhenFileExist_ShouldReturnsTotalNumberOfRecords()
         {
-            CSVBuilderFactory cSVBuilderFactory = new CSVBuilderFactory();
+            cSVBuilderFactory = new CSVBuilderFactory();
             CensusAnalyser counte = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", indianStateCodeFile, indianStateCodeHeader);
             CSVData count = new CSVData(counte.loadCSVFileData);
-            int c = (int)count();
-            Assert.AreEqual(37, c);
+            list = (List<string>)count();
+            Assert.AreEqual(37, list.Count);
         }
 
         //TC-2.2
         [Test]
         public void givenIndianStateCodeCSVFile_WhenFileNotExist_ShouldThrowFileNotFoundException()
         {
-            CSVBuilderFactory cSVBuilderFactory = new CSVBuilderFactory();
+            cSVBuilderFactory = new CSVBuilderFactory();
             CensusAnalyser counte = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", invalidCsvFilePath, indianStateCodeHeader);
             CSVData count = new CSVData(counte.loadCSVFileData);
             var countt = Assert.Throws<CensusAnalyserException>(() => count());
@@ -114,7 +117,7 @@ namespace CensusAnalyserProblemTest
         [Test]
         public void givenIndianStateCodeCSVFile_WhenFileFormatIsIncorrect_ShouldThrowIncorrectFileFormatException()
         {
-            CSVBuilderFactory cSVBuilderFactory = new CSVBuilderFactory();
+            cSVBuilderFactory = new CSVBuilderFactory();
             CensusAnalyser counte = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", nonCSVFile, indianStateCodeHeader);
             CSVData count = new CSVData(counte.loadCSVFileData);
             var countt = Assert.Throws<CensusAnalyserException>(() => count());
@@ -125,7 +128,7 @@ namespace CensusAnalyserProblemTest
         [Test]
         public void givenIndianStateCodeCSVFile_WhenFileFormatIsCorrectButDelimeterIsWrong_ShouldThrowIncorrectDelimeterException()
         {
-            CSVBuilderFactory cSVBuilderFactory = new CSVBuilderFactory();
+            cSVBuilderFactory = new CSVBuilderFactory();
             CensusAnalyser counte = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", wrongIndianStateCodeFile, indianStateCodeHeader);
             CSVData count = new CSVData(counte.loadCSVFileData);
             var countt = Assert.Throws<CensusAnalyserException>(() => count());
@@ -136,7 +139,7 @@ namespace CensusAnalyserProblemTest
         [Test]
         public void givenIndianStateCodeCSVFile_WhenFileFormatIsCorrectButHeaderIsIncorrect_ShouldThrowIncorrectHeaderException()
         {
-            CSVBuilderFactory cSVBuilderFactory = new CSVBuilderFactory();
+            cSVBuilderFactory = new CSVBuilderFactory();
             CensusAnalyser counte = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", wrongHeaderFile, indianStateCodeHeader);
             CSVData count = new CSVData(counte.loadCSVFileData);
             var countt = Assert.Throws<CensusAnalyserException>(() => count());
