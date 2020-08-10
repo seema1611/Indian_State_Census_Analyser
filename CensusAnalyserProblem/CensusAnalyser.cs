@@ -1,13 +1,14 @@
-﻿using System;
+﻿using CensusAnalyzerProblem;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 namespace CensusAnalyserProblem
 {
-    public class CensusAnalyser
+    public class CensusAnalyser : ICSVBuilder
     {
-        public delegate int CSVData();
+        public delegate object CSVData();
         string[] csvFileData;
         string csvFilePath;
         string headers;
@@ -18,7 +19,7 @@ namespace CensusAnalyserProblem
             this.headers = headers;
         }
 
-        public int loadCSVFileData()
+        public object loadCSVFileData()
         {
             int count = 0;
             if (Path.GetExtension(csvFilePath) != ".csv")
