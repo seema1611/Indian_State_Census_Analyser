@@ -10,9 +10,11 @@ namespace CensusAnalyserProblem
     public class CensusAnalyser : ICSVBuilder
     {
         public delegate object CSVData();
-        string[] csvFileData;
+        //string[] csvFileData;
         string csvFilePath;
         string headers;
+        int count = 0;
+        Dictionary<int, string> dataDictionary = new Dictionary<int, string>();
 
         public CensusAnalyser(string csvFilePath, string headers)
         {
@@ -22,7 +24,6 @@ namespace CensusAnalyserProblem
 
         public object loadCSVFileData()
         {
-            int count = 0;
             if (Path.GetExtension(csvFilePath) != ".csv")
             {
                 throw new CensusAnalyserException("Incorrect File Format", CensusAnalyserException.ExceptionType.INCORRECT_FILE_FORMAT);
@@ -34,18 +35,21 @@ namespace CensusAnalyserProblem
 
             string[] csvFileData = File.ReadAllLines(csvFilePath);
             List<string> list = csvFileData.ToList();
+
             if (csvFileData[0] != headers)
             {
                 throw new CensusAnalyserException("Incorrect Headers", CensusAnalyserException.ExceptionType.INCORRECT_HEADER);
             }
-            foreach (string record in csvFileData.Skip(1))
+            foreach (string record in list)
             {
+                count++;
+                dataDictionary.Add(count, record);
                 if (!record.Contains(","))
                 {
                     throw new CensusAnalyserException("File Contains Wrong Delimiter", CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER);
                 }
             }
-            return csvFileData.Skip(1).ToList();
+            return dataDictionary.Skip(1).ToDictionary(d => d.Key, d => d.Value);
         }
 
         public string sortingCSVData(string csvFilePath, string newPath, int number)
