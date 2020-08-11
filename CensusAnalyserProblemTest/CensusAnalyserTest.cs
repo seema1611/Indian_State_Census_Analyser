@@ -179,5 +179,17 @@ namespace CensusAnalyserProblemTest
             List<IndianCensusDAO> indianCensusSortedList = JsonConvert.DeserializeObject<List<IndianCensusDAO>>(sortedList);
             Assert.AreEqual("Sikkim", indianCensusSortedList[indianCensusSortedList.Count - 1].state);
         }
+
+
+        //<--------------------UC-6-------------------->
+        //TC-6.1
+        [Test]
+        public void GivenIndianStateCodeCSVFile_WhenSorted_ShouldReturnsMostPopulousStateBasedOnDensityPerSqm()
+        {
+            Dictionary<string, IndianCensusDAO> indianStateRecord = censusAnalyser.loadIndianCensusData(indianCensusDataHeaders, csvFilePath);
+            string sortedList = censusAnalyser.SortAndConvertCensusToJson(indianStateRecord, SortType.SortBy.POPULATION_DENSITY_DESCENDING);
+            List<IndianCensusDAO> indianCensusSortedList = JsonConvert.DeserializeObject<List<IndianCensusDAO>>(sortedList);
+            Assert.AreEqual("Bihar", indianCensusSortedList[0].state);
+        }
     }
 }
