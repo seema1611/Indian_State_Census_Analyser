@@ -1,4 +1,10 @@
-﻿using System;
+﻿/***************************************************************************
+ * @purpose : Census Analyzer Exception is used to handle custom exception
+ * @author  : Seema Balkrishna Rajpure
+ * @Date    : 08/08/2020
+ ***************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 

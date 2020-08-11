@@ -1,17 +1,14 @@
 using CensusAnalyserProblem;
-using Newtonsoft.Json;
-using NUnit.Framework;
 using System.Collections.Generic;
-using System.Linq;
-using static CensusAnalyserProblem.CensusAnalyser;
+using NUnit.Framework;
+using Newtonsoft.Json;
+using static CensusAnalyserProblem.SortType;
 
 namespace CensusAnalyserProblemTest
 {
     public class CensusAnalyserTest
     {
-
         //Indian State Data
-        static string indianCensusDataHeaders = "State,Population,AreaInSqKm,DensityPerSqKm";
         static string csvFilePath = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCensusData.csv";
         static string invalidCsvFilePath = @"D:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCensusData.csv";
         static string nonCSVFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCensusData.cs";
@@ -20,15 +17,16 @@ namespace CensusAnalyserProblemTest
         static string SortedindiaStateCensusData = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\SortedindiaStateCensusData.csv";
 
         //Indian State Code
-        static string indianStateCodeHeader = "SrNo,State Name,TIN,StateCode";
         static string indianStateCodeFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\IndiaStateCode.csv";
         static string wrongIndianStateCodeFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\InCorrectIndiaStateCode.csv";
         static string SortedindiaStateCensusCode = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\SortedindiaStateCensusCode.csv";
 
-        CensusAnalyser censusAnalyser;
-        CSVBuilderFactory cSVBuilderFactory;
-        List<string> list = new List<string>();
-        Dictionary<int, string> allRecords = new Dictionary<int, string>();
+        //Headers
+        static string indianCensusDataHeaders = "State,Population,AreaInSqKm,DensityPerSqKm";
+        static string indianStateCodeHeader = "SrNo,State Name,TIN,StateCode";
+
+
+        CensusAnalyser censusAnalyser = new CensusAnalyser();
 
         [SetUp]
         public void Setup()
@@ -39,114 +37,84 @@ namespace CensusAnalyserProblemTest
         //<--------------------UC-1-------------------->
         //TC-1.1
         [Test]
-        public void givenIndianCensusCSVFile_WhenFileExist_ShouldReturnsTotalNumberOfRecords()
+        public void GivenIndianCensusDataCSVFile_WhenFileExist_ShouldReturnsTotalNumberOfRecords()
         {
-            cSVBuilderFactory = new CSVBuilderFactory();
-            CensusAnalyser counter = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", csvFilePath, indianCensusDataHeaders);
-            CSVData count = new CSVData(counter.loadCSVFileData);
-            allRecords = (Dictionary<int, string>)count();
-            Assert.AreEqual(29, allRecords.Count);
+            Dictionary<string, IndianCensusDAO> indianCensusRecord = censusAnalyser.loadIndianCensusData(indianCensusDataHeaders, csvFilePath);
+            Assert.AreEqual(29, indianCensusRecord.Count);
         }
 
         //TC-1.2
         [Test]
-        public void givenIndianCensusCSVFile_WhenFileNotExist_ShouldThrowFileNotFoundException()
+        public void GivenIndianCensusDataCSVFile_WhenFileNotExist_ShouldThrowFileNotFoundException()
         {
-            cSVBuilderFactory = new CSVBuilderFactory();
-            CensusAnalyser counter = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", invalidCsvFilePath, indianCensusDataHeaders);
-            CSVData count = new CSVData(counter.loadCSVFileData);
-            var countt = Assert.Throws<CensusAnalyserException>(() => count());
-            Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, countt.type);
+            var customException = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.loadIndianCensusData(indianCensusDataHeaders, invalidCsvFilePath));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, customException.type);
         }
 
         //TC-1.3
         [Test]
-        public void givenIndianCensusCSVFile_WhenFileFormatIsIncorrect_ShouldThrowIncorrectFileFormatException()
+        public void GivenIndianCensusDataCSVFile_WhenFileFormatIsIncorrect_ShouldThrowIncorrectFileFormatException()
         {
-            cSVBuilderFactory = new CSVBuilderFactory();
-            CensusAnalyser counter = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", nonCSVFile, indianCensusDataHeaders);
-            CSVData count = new CSVData(counter.loadCSVFileData);
-            var countt = Assert.Throws<CensusAnalyserException>(() => count());
-            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_FILE_FORMAT, countt.type);
+            var customException = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.loadIndianCensusData(indianCensusDataHeaders, nonCSVFile));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_FILE_FORMAT, customException.type);
         }
 
         //TC-1.4
         [Test]
-        public void givenIndianCensusCSVFile_WhenFileFormatIsCorrectButDelimeterIsWrong_ShouldThrowIncorrectDelimeterException()
+        public void GivenIndianCensusCSVFile_WhenFileFormatIsCorrectButDelimeterIsWrong_ShouldThrowIncorrectDelimeterException()
         {
-            cSVBuilderFactory = new CSVBuilderFactory();
-            CensusAnalyser counter = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", wrongDelemeterFile, indianCensusDataHeaders);
-            CSVData count = new CSVData(counter.loadCSVFileData);
-            var countt = Assert.Throws<CensusAnalyserException>(() => count());
-            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER, countt.type);
+            var customException = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.loadIndianCensusData(indianCensusDataHeaders, wrongDelemeterFile));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER, customException.type);
         }
 
         //TC-1.5
         [Test]
-        public void givenIndianCensusCSVFile_WhenFileFormatIsCorrectButHeaderIsIncorrect_ShouldThrowIncorrectHeaderException()
+        public void GivenIndianCensusCSVFile_WhenFileFormatIsCorrectButHeaderIsIncorrect_ShouldThrowIncorrectHeaderException()
         {
-            cSVBuilderFactory = new CSVBuilderFactory();
-            CensusAnalyser counter = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", wrongHeaderFile, indianCensusDataHeaders);
-            CSVData count = new CSVData(counter.loadCSVFileData);
-            var countt = Assert.Throws<CensusAnalyserException>(() => count());
-            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_HEADER, countt.type);
+            var customException = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.loadIndianCensusData(indianCensusDataHeaders, wrongHeaderFile));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_HEADER, customException.type);
         }
 
         //<---------------Indian StateCode Code--------------->
         //<--------------------UC-2-------------------->
         //TC-2.1
         [Test]
-        public void givenIndianStateCodeCSVFile_WhenFileExist_ShouldReturnsTotalNumberOfRecords()
+        public void GivenIndianStateCodeCSVFile_WhenFileExist_ShouldReturnsTotalNumberOfRecords()
         {
-            cSVBuilderFactory = new CSVBuilderFactory();
-            CensusAnalyser counter = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", indianStateCodeFile, indianStateCodeHeader);
-            CSVData count = new CSVData(counter.loadCSVFileData);
-            allRecords = (Dictionary<int, string>)count();
-            Assert.AreEqual(37, allRecords.Count);
+            Dictionary<string, IndianCensusDAO> indianStateCodeList = censusAnalyser.loadIndianCensusData(indianStateCodeHeader, indianStateCodeFile);
+            Assert.AreEqual(37, indianStateCodeList.Count);
         }
 
         //TC-2.2
         [Test]
-        public void givenIndianStateCodeCSVFile_WhenFileNotExist_ShouldThrowFileNotFoundException()
+        public void GivenIndianStateCodeCSVFile_WhenFileNotExist_ShouldThrowFileNotFoundException()
         {
-            cSVBuilderFactory = new CSVBuilderFactory();
-            CensusAnalyser counter = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", invalidCsvFilePath, indianStateCodeHeader);
-            CSVData count = new CSVData(counter.loadCSVFileData);
-            var countt = Assert.Throws<CensusAnalyserException>(() => count());
-            Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, countt.type);
+            var customException = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.loadIndianCensusData(indianStateCodeHeader, invalidCsvFilePath));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, customException.type);
         }
 
         //TC-2.3
         [Test]
-        public void givenIndianStateCodeCSVFile_WhenFileFormatIsIncorrect_ShouldThrowIncorrectFileFormatException()
+        public void GivenIndianStateCodeCSVFile_WhenFileFormatIsIncorrect_ShouldThrowIncorrectFileFormatException()
         {
-            cSVBuilderFactory = new CSVBuilderFactory();
-            CensusAnalyser counter = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", nonCSVFile, indianStateCodeHeader);
-            CSVData count = new CSVData(counter.loadCSVFileData);
-            var countt = Assert.Throws<CensusAnalyserException>(() => count());
-            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_FILE_FORMAT, countt.type);
+            var customException = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.loadIndianCensusData(indianStateCodeHeader, nonCSVFile));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_FILE_FORMAT, customException.type);
         }
 
         //TC-2.4
         [Test]
-        public void givenIndianStateCodeCSVFile_WhenFileFormatIsCorrectButDelimeterIsWrong_ShouldThrowIncorrectDelimeterException()
+        public void GivenIndianStateCodeCSVFile_WhenFileFormatIsCorrectButDelimeterIsWrong_ShouldThrowIncorrectDelimeterException()
         {
-            cSVBuilderFactory = new CSVBuilderFactory();
-            CensusAnalyser counter = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", wrongIndianStateCodeFile, indianStateCodeHeader);
-            CSVData count = new CSVData(counter.loadCSVFileData);
-            var countt = Assert.Throws<CensusAnalyserException>(() => count());
-            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER, countt.type);
+            var customException = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.loadIndianCensusData(indianStateCodeHeader, wrongIndianStateCodeFile));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER, customException.type);
         }
 
         //TC-2.5
         [Test]
-        public void givenIndianStateCodeCSVFile_WhenFileFormatIsCorrectButHeaderIsIncorrect_ShouldThrowIncorrectHeaderException()
+        public void GivenIndianStateCodeCSVFile_WhenFileFormatIsCorrectButHeaderIsIncorrect_ShouldThrowIncorrectHeaderException()
         {
-            cSVBuilderFactory = new CSVBuilderFactory();
-            CensusAnalyser counter = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", wrongHeaderFile, indianStateCodeHeader);
-            CSVData count = new CSVData(counter.loadCSVFileData);
-            var countt = Assert.Throws<CensusAnalyserException>(() => count());
-            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_HEADER, countt.type);
+            var customException = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.loadIndianCensusData(indianStateCodeHeader, wrongHeaderFile));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_HEADER, customException.type);
         }
 
         //<--------------------UC-3-------------------->
@@ -154,69 +122,40 @@ namespace CensusAnalyserProblemTest
         [Test]
         public void givenCSVData_WhenSort_ShouldReturnSortedFirstDataInJsonFormat()
         {
-            cSVBuilderFactory = new CSVBuilderFactory();
-            CensusAnalyser counter = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", csvFilePath, indianCensusDataHeaders);
-            censusAnalyser = new CensusAnalyser(csvFilePath, indianCensusDataHeaders);
-            string sorted = censusAnalyser.sortingCSVData(csvFilePath, SortedindiaStateCensusData, 0).ToString();
-            string[] sortatedData = JsonConvert.DeserializeObject<string[]>(sorted);
-            Assert.AreEqual("Andhra Pradesh,49386799,162968,303", sortatedData[0]);
+            Dictionary<string, IndianCensusDAO> indianCensusRecord = censusAnalyser.loadIndianCensusData(indianCensusDataHeaders, csvFilePath);
+            string sortedList = censusAnalyser.SortAndConvertCensusToJson(indianCensusRecord, SortType.SortBy.STATE_ASC);
+            List<IndianCensusDAO> indianCensusSortedList = JsonConvert.DeserializeObject<List<IndianCensusDAO>>(sortedList);
+            Assert.AreEqual("Andhra Pradesh", indianCensusSortedList[0].state);
         }
 
         //TC-3.2
         [Test]
         public void givenCSVData_WhenSort_ShouldReturnSortedLastDataInJsonFormat()
         {
-            cSVBuilderFactory = new CSVBuilderFactory();
-            CensusAnalyser counter = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", csvFilePath, indianCensusDataHeaders);
-            censusAnalyser = new CensusAnalyser(csvFilePath, indianCensusDataHeaders);
-            string sorted = censusAnalyser.sortingCSVData(csvFilePath, SortedindiaStateCensusData, 0).ToString();
-            string[] sortatedData = JsonConvert.DeserializeObject<string[]>(sorted);
-            int lastSortedData = sortatedData.Length - 1;
-            Assert.AreEqual("West Bengal,91347736,88752,1029", sortatedData[lastSortedData]);
+            Dictionary<string, IndianCensusDAO> indianCensusRecord = censusAnalyser.loadIndianCensusData(indianCensusDataHeaders, csvFilePath);
+            string sortedList = censusAnalyser.SortAndConvertCensusToJson(indianCensusRecord, SortType.SortBy.STATE_ASC);
+            List<IndianCensusDAO> indianCensusSortedList = JsonConvert.DeserializeObject<List<IndianCensusDAO>>(sortedList);
+            Assert.AreEqual("West Bengal", indianCensusSortedList[indianCensusSortedList.Count - 1].state);
         }
 
         //<--------------------UC-4-------------------->
         //TC-4.1
         [Test]
-        public void givenCSVData_WhenSortByStateCode_ShouldReturnSortedDataInJsonFormat()
-        {
-            cSVBuilderFactory = new CSVBuilderFactory();
-            CensusAnalyser counter = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", csvFilePath, indianCensusDataHeaders);
-            censusAnalyser = new CensusAnalyser(csvFilePath, indianCensusDataHeaders);
-            string sorted = censusAnalyser.sortingCSVData(indianStateCodeFile, SortedindiaStateCensusCode, 3).ToString();
-            string[] sortatedData = JsonConvert.DeserializeObject<string[]>(sorted);
-            Assert.AreEqual("3,Andhra Pradesh New,37,AD", sortatedData[0]);
-        }
-
-        //TC-4.2
-        [Test]
         public void givenCSVData_WhenSortByStateCode_ShouldReturnSortedLastDataInJsonFormat()
         {
-            cSVBuilderFactory = new CSVBuilderFactory();
-            CensusAnalyser counter = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", csvFilePath, indianCensusDataHeaders);
-            censusAnalyser = new CensusAnalyser(csvFilePath, indianCensusDataHeaders);
-            string sorted = censusAnalyser.sortingCSVData(indianStateCodeFile, SortedindiaStateCensusCode, 3).ToString();
-            string[] sortatedData = JsonConvert.DeserializeObject<string[]>(sorted);
-            int lastSortedData = sortatedData.Length - 1;
-            Assert.AreEqual("37,West Bengal,19,WB", sortatedData[lastSortedData]);
+            Dictionary<string, IndianCensusDAO> indianStateRecord = censusAnalyser.loadIndianCensusData(indianStateCodeHeader, indianStateCodeFile);
+            string sortedList = censusAnalyser.SortAndConvertCensusToJson(indianStateRecord, SortType.SortBy.STATE_CODE_ASC);
+            List<IndianCensusDAO> indianCensusSortedList = JsonConvert.DeserializeObject<List<IndianCensusDAO>>(sortedList);
+            Assert.AreEqual("AD", indianCensusSortedList[0].stateCode);
         }
 
         [Test]
-        public void givenIndianStateCodeCSVFile_When_ShouldReturnsTotalNumberOfRecords()
+        public void givenIndianDataCodeCSVFile_Whenloaded_ShouldReturnsTotalNumberOfRecords()
         {
-
-
-            cSVBuilderFactory = new CSVBuilderFactory();
-            CensusAnalyser counter = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", csvFilePath, indianCensusDataHeaders);
-            CSVData count = new CSVData(counter.loadCSVFileData);
-            Dictionary<int, string> allRecordsData = (Dictionary<int, string>)count();
-
-            CensusAnalyser counter1 = (CensusAnalyser)cSVBuilderFactory.CreateObject("CensusAnalyser", indianStateCodeFile, indianStateCodeHeader);
-            CSVData count1 = new CSVData(counter1.loadCSVFileData);
-            Dictionary<int, string> allRecordsCode = (Dictionary<int, string>)count1();
-
-            Assert.AreEqual(29, allRecordsData.Count);
-            Assert.AreEqual(37, allRecordsCode.Count);
+            Dictionary<string, IndianCensusDAO> indianStateRecord = censusAnalyser.loadIndianCensusData(indianStateCodeHeader, indianStateCodeFile);
+            string sortedList = censusAnalyser.SortAndConvertCensusToJson(indianStateRecord, SortType.SortBy.STATE_CODE_ASC);
+            List<IndianCensusDAO> indianCensusSortedList = JsonConvert.DeserializeObject<List<IndianCensusDAO>>(sortedList);
+            Assert.AreEqual("WB", indianCensusSortedList[indianCensusSortedList.Count - 1].stateCode);
         }
     }
 }
