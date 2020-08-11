@@ -212,5 +212,15 @@ namespace CensusAnalyserProblemTest
             List<IndianCensusDAO> indianCensusSortedList = JsonConvert.DeserializeObject<List<IndianCensusDAO>>(sortedList);
             Assert.AreEqual("Rajasthan", indianCensusSortedList[0].state);
         }
+
+        //TC-7.2
+        [Test]
+        public void GivenIndianStateCodeCSVFile_WhenSorted_ShouldReturnsLeastPopulousStateBasedOnAreaPerSqm()
+        {
+            Dictionary<string, IndianCensusDAO> indianStateRecord = censusAnalyser.loadIndianCensusData(indianCensusDataHeaders, csvFilePath);
+            string sortedList = censusAnalyser.SortAndConvertCensusToJson(indianStateRecord, SortType.SortBy.AREA_PER_SQM_DESCENDING);
+            List<IndianCensusDAO> indianCensusSortedList = JsonConvert.DeserializeObject<List<IndianCensusDAO>>(sortedList);
+            Assert.AreEqual("Goa", indianCensusSortedList[indianCensusSortedList.Count - 1].state);
+        }
     }
 }
