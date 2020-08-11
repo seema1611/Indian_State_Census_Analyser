@@ -123,7 +123,7 @@ namespace CensusAnalyserProblemTest
         public void givenCSVData_WhenSort_ShouldReturnSortedFirstDataInJsonFormat()
         {
             Dictionary<string, IndianCensusDAO> indianCensusRecord = censusAnalyser.loadIndianCensusData(indianCensusDataHeaders, csvFilePath);
-            string sortedList = censusAnalyser.SortAndConvertCensusToJson(indianCensusRecord, SortType.SortBy.STATE_ASC);
+            string sortedList = censusAnalyser.SortAndConvertCensusToJson(indianCensusRecord, SortType.SortBy.STATE_ASCENDING);
             List<IndianCensusDAO> indianCensusSortedList = JsonConvert.DeserializeObject<List<IndianCensusDAO>>(sortedList);
             Assert.AreEqual("Andhra Pradesh", indianCensusSortedList[0].state);
         }
@@ -133,7 +133,7 @@ namespace CensusAnalyserProblemTest
         public void givenCSVData_WhenSort_ShouldReturnSortedLastDataInJsonFormat()
         {
             Dictionary<string, IndianCensusDAO> indianCensusRecord = censusAnalyser.loadIndianCensusData(indianCensusDataHeaders, csvFilePath);
-            string sortedList = censusAnalyser.SortAndConvertCensusToJson(indianCensusRecord, SortType.SortBy.STATE_ASC);
+            string sortedList = censusAnalyser.SortAndConvertCensusToJson(indianCensusRecord, SortType.SortBy.STATE_ASCENDING);
             List<IndianCensusDAO> indianCensusSortedList = JsonConvert.DeserializeObject<List<IndianCensusDAO>>(sortedList);
             Assert.AreEqual("West Bengal", indianCensusSortedList[indianCensusSortedList.Count - 1].state);
         }
@@ -144,18 +144,31 @@ namespace CensusAnalyserProblemTest
         public void givenCSVData_WhenSortByStateCode_ShouldReturnSortedLastDataInJsonFormat()
         {
             Dictionary<string, IndianCensusDAO> indianStateRecord = censusAnalyser.loadIndianCensusData(indianStateCodeHeader, indianStateCodeFile);
-            string sortedList = censusAnalyser.SortAndConvertCensusToJson(indianStateRecord, SortType.SortBy.STATE_CODE_ASC);
+            string sortedList = censusAnalyser.SortAndConvertCensusToJson(indianStateRecord, SortType.SortBy.STATE_CODE_ASCENDING);
             List<IndianCensusDAO> indianCensusSortedList = JsonConvert.DeserializeObject<List<IndianCensusDAO>>(sortedList);
             Assert.AreEqual("AD", indianCensusSortedList[0].stateCode);
         }
 
+        //TC-4.2
         [Test]
         public void givenIndianDataCodeCSVFile_Whenloaded_ShouldReturnsTotalNumberOfRecords()
         {
             Dictionary<string, IndianCensusDAO> indianStateRecord = censusAnalyser.loadIndianCensusData(indianStateCodeHeader, indianStateCodeFile);
-            string sortedList = censusAnalyser.SortAndConvertCensusToJson(indianStateRecord, SortType.SortBy.STATE_CODE_ASC);
+            string sortedList = censusAnalyser.SortAndConvertCensusToJson(indianStateRecord, SortType.SortBy.STATE_CODE_ASCENDING);
             List<IndianCensusDAO> indianCensusSortedList = JsonConvert.DeserializeObject<List<IndianCensusDAO>>(sortedList);
             Assert.AreEqual("WB", indianCensusSortedList[indianCensusSortedList.Count - 1].stateCode);
         }
+
+        //<--------------------UC-5-------------------->
+        //TC-5.1
+        [Test]
+        public void GivenIndianStateCodeCSVFileForSorting_WhenFileExist_ShouldReturnsMostPopulousState()
+        {
+            Dictionary<string, IndianCensusDAO> indianStateRecord = censusAnalyser.loadIndianCensusData(indianCensusDataHeaders, csvFilePath);
+            string sortedList = censusAnalyser.SortAndConvertCensusToJson(indianStateRecord, SortType.SortBy.POPULATION_DESCENDING);
+            List<IndianCensusDAO> indianCensusSortedList = JsonConvert.DeserializeObject<List<IndianCensusDAO>>(sortedList);
+            Assert.AreEqual("Uttar Pradesh", indianCensusSortedList[0].state);
+        }
+
     }
 }
