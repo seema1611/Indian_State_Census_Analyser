@@ -28,6 +28,7 @@ namespace CensusAnalyserProblemTest
         //US Census Data
         static string usCSVFilePath = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\USCensusData.csv";
         static string invalidUSCsvFilePath = @"D:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\USCensusData.csv";
+        static string nonUSCSVFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\USCensusData.cs";
 
         CensusAnalyser censusAnalyser = new CensusAnalyser();
         USCensusAnalyser usCensusAnalyser = new USCensusAnalyser();
@@ -244,6 +245,14 @@ namespace CensusAnalyserProblemTest
         {
             var customException = Assert.Throws<CensusAnalyserException>(() => usCensusAnalyser.loadUsCensusData(usCensusDataHeaders, invalidUSCsvFilePath));
             Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, customException.type);
+        }
+
+        //TC-8.3
+        [Test]
+        public void GivenUSCensusDataCSVFile_WhenFileFormatIsIncorrect_ShouldThrowIncorrectFileFormatException()
+        {
+            var customException = Assert.Throws<CensusAnalyserException>(() => usCensusAnalyser.loadUsCensusData(usCensusDataHeaders, nonUSCSVFile));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_FILE_FORMAT, customException.type);
         }
     }
 }
