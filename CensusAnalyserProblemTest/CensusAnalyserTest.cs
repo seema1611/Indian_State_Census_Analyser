@@ -27,6 +27,7 @@ namespace CensusAnalyserProblemTest
 
         //US Census Data
         static string usCSVFilePath = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\USCensusData.csv";
+        static string invalidUSCsvFilePath = @"D:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\USCensusData.csv";
 
         CensusAnalyser censusAnalyser = new CensusAnalyser();
         USCensusAnalyser usCensusAnalyser = new USCensusAnalyser();
@@ -235,6 +236,14 @@ namespace CensusAnalyserProblemTest
         {
             string[] totalUSRecord = usCensusAnalyser.loadUsCensusData(usCensusDataHeaders, usCSVFilePath);
             Assert.AreEqual(51, totalUSRecord.Length);
+        }
+
+        //TC-8.2
+        [Test]
+        public void GivenUSCensusDataCSVFile_WhenFileNotExist_ShouldThrowFileNotFoundException()
+        {
+            var customException = Assert.Throws<CensusAnalyserException>(() => usCensusAnalyser.loadUsCensusData(usCensusDataHeaders, invalidUSCsvFilePath));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, customException.type);
         }
     }
 }
