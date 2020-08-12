@@ -29,6 +29,7 @@ namespace CensusAnalyserProblemTest
         static string usCSVFilePath = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\USCensusData.csv";
         static string invalidUSCsvFilePath = @"D:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\USCensusData.csv";
         static string nonUSCSVFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\USCensusData.cs";
+        static string wrongUSDelemeterFile = @"C:\Users\User\source\repos\CensusAnalyserProblem\CensusAnalyserProblemTest\Resources\InCorrectUSDelimeters.csv";
 
         CensusAnalyser censusAnalyser = new CensusAnalyser();
         USCensusAnalyser usCensusAnalyser = new USCensusAnalyser();
@@ -253,6 +254,14 @@ namespace CensusAnalyserProblemTest
         {
             var customException = Assert.Throws<CensusAnalyserException>(() => usCensusAnalyser.loadUsCensusData(usCensusDataHeaders, nonUSCSVFile));
             Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_FILE_FORMAT, customException.type);
+        }
+
+        //TC-8.4
+        [Test]
+        public void GivenUSCensusCSVFile_WhenFileFormatIsCorrectButDelimeterIsWrong_ShouldThrowIncorrectDelimeterException()
+        {
+            var customException = Assert.Throws<CensusAnalyserException>(() => usCensusAnalyser.loadUsCensusData(usCensusDataHeaders, wrongUSDelemeterFile));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER, customException.type);
         }
     }
 }
