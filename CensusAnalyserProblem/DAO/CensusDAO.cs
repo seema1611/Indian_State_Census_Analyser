@@ -60,5 +60,13 @@ namespace CensusAnalyserProblem
             TIN = indianStateCode.TIN;
             stateCode = indianStateCode.stateCode;
         }
+        public object getDTO(SortingOrder.DTO dtoFormat, CensusDAO censusDAO)
+        {
+            if (dtoFormat.Equals(SortingOrder.DTO.INDIA_CENSUS))
+                return new IndianCensus(censusDAO.state, censusDAO.population, censusDAO.areaInSqKm, censusDAO.populationDensity);
+            if (dtoFormat.Equals(SortingOrder.DTO.INDIA_STATE_CODE))
+                return new IndianStateCode(censusDAO.state, censusDAO.srNo, censusDAO.TIN, censusDAO.stateCode);
+            return new USCensus(censusDAO.state, censusDAO.stateCode, censusDAO.population, censusDAO.waterArea, censusDAO.housingUnits, censusDAO.housingDensity, censusDAO.landArea, censusDAO.areaInSqKm);
+        }
     }
 }

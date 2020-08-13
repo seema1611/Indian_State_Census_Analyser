@@ -15,7 +15,6 @@ namespace CensusAnalyserProblem
 {
     public class CensusDataAnalyser : ICSVBuilder
     {
-
         public Dictionary<object, CensusDAO> ReadCSVFile<T>(string headers, string csvFilePath)
         {
             try

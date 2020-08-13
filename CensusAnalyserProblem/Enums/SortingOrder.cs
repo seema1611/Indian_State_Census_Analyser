@@ -25,6 +25,10 @@ namespace CensusAnalyserProblem
         {
             INDIA, US
         }
+        public enum DTO
+        {
+            INDIA_CENSUS, INDIA_STATE_CODE, US
+        }
         public static List<CensusDAO> SortCensusData(List<CensusDAO> list, string sortType, SortOrder sortOrder)
         {
             return sortOrder == SortOrder.ASCENDING ? list.OrderBy(c => c.GetType().GetField(sortType).GetValue(c)).ToList()

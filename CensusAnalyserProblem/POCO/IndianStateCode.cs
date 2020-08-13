@@ -8,6 +8,7 @@ using CsvHelper.Configuration.Attributes;
 
 namespace CensusAnalyserProblem
 {
+
     public class IndianStateCode
     {
         [Name("SrNo")]
@@ -21,5 +22,14 @@ namespace CensusAnalyserProblem
 
         [Name("StateCode")]
         public string stateCode { get; set; }
+
+        public IndianStateCode() { }
+        public IndianStateCode(string state, int srNo, int tin, string stateCode)
+        {
+            this.state = state;
+            this.srNo = srNo;
+            this.TIN = tin;
+            this.stateCode = stateCode;
+        }
     }
 }
