@@ -309,5 +309,15 @@ namespace CensusAnalyserProblemTest
             List<USCensus> usCensusSortedList = JsonConvert.DeserializeObject<List<USCensus>>(sortedList);
             Assert.AreEqual("District of Columbia", usCensusSortedList[0].state);
         }
+
+        //UC-11
+        [Test]
+        public void GivenUsCensusCSVFileForSorting_WhenFileExist_ShouldReturnsLeastPopulousStateBasedOnPopulationDensity()
+        {
+            Dictionary<object, CensusDAO> usRecord = censusAdapter.LoadCensusData<USCensus>(Country.US, usCensusDataHeaders, usCSVFilePath);
+            string sortedList = censusAdapter.SortAndConvertCensusToJson(usRecord, DTO.US, SortBy.POPULATION_DENSITY, SortOrder.DESCENDING);
+            List<USCensus> usCensusSortedList = JsonConvert.DeserializeObject<List<USCensus>>(sortedList);
+            Assert.AreEqual("Alaska", usCensusSortedList[usCensusSortedList.Count - 1].state);
+        }
     }
 }
