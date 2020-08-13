@@ -300,7 +300,7 @@ namespace CensusAnalyserProblemTest
         }
 
         //<--------------------UC-10-------------------->
-        //UC-10
+        //UC-10.1
         [Test]
         public void GivenUsCensusCSVFile_Whensorted_ShouldReturnsMostPopulousStateBasedOnPopulationDensity()
         {
@@ -310,7 +310,7 @@ namespace CensusAnalyserProblemTest
             Assert.AreEqual("District of Columbia", usCensusSortedList[0].state);
         }
 
-        //UC-11
+        //UC-10.2
         [Test]
         public void GivenUsCensusCSVFileForSorting_WhenFileExist_ShouldReturnsLeastPopulousStateBasedOnPopulationDensity()
         {
@@ -318,6 +318,16 @@ namespace CensusAnalyserProblemTest
             string sortedList = censusAdapter.SortAndConvertCensusToJson(usRecord, DTO.US, SortBy.POPULATION_DENSITY, SortOrder.DESCENDING);
             List<USCensus> usCensusSortedList = JsonConvert.DeserializeObject<List<USCensus>>(sortedList);
             Assert.AreEqual("Alaska", usCensusSortedList[usCensusSortedList.Count - 1].state);
+        }
+
+        //TC-10.3
+        [Test]
+        public void GivenUsCensusCSVFileForSorting_WhenFileExist_ShouldReturnsMostPopulousStateBasedOnArea()
+        {
+            Dictionary<object, CensusDAO> usRecord = censusAdapter.LoadCensusData<USCensus>(Country.US, usCensusDataHeaders, usCSVFilePath);
+            string sortedList = censusAdapter.SortAndConvertCensusToJson(usRecord, DTO.US, SortBy.AREA_IN_SQ_KM, SortOrder.DESCENDING);
+            List<USCensus> usCensusSortedList = JsonConvert.DeserializeObject<List<USCensus>>(sortedList);
+            Assert.AreEqual("Alaska", usCensusSortedList[0].state);
         }
     }
 }
