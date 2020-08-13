@@ -12,6 +12,6 @@ namespace CensusAnalyserProblem
 {
    public interface ICSVBuilder
     {
-        public Dictionary<string, IndianCensusDAO> GetCSVFileData(string headers, string csvFilePath);
+        public Dictionary<object, CensusDAO> ReadCSVFile<T>(string headers, string csvFilePath);
     }
 }

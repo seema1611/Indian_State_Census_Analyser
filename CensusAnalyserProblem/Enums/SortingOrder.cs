@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*******************************************************
+ * @purpose : Sorting Order class is used for sorting
+ * @author  : Seema Balkrishna Rajpure
+ * @Date    : 11/08/2020
+ *******************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,19 +15,20 @@ namespace CensusAnalyserProblem
     {
         public enum SortBy
         {
-            STATE_ASCENDING, STATE_CODE_ASCENDING, POPULATION_DESCENDING, POPULATION_DENSITY_DESCENDING, AREA_PER_SQM_DESCENDING
+            STATE, STATE_CODE, POPULATION, POPULATION_DENSITY, AREA_IN_SQ_KM
         }
-        public static List<IndianCensusDAO> SortIndianCensusData(List<IndianCensusDAO> list, SortBy sortingOrder)
+        public enum SortOrder
         {
-            switch (sortingOrder)
-            {
-                case SortBy.STATE_ASCENDING: return list.OrderBy(c => c.state).ToList();
-                case SortBy.STATE_CODE_ASCENDING: return list.OrderBy(c => c.stateCode).ToList();
-                case SortBy.POPULATION_DESCENDING: return list.OrderByDescending(c => c.population).ToList();
-                case SortBy.POPULATION_DENSITY_DESCENDING: return list.OrderByDescending(c => c.densityPerSqKm).ToList();
-                case SortBy.AREA_PER_SQM_DESCENDING: return list.OrderByDescending(c => c.areaInSqkm).ToList();
-                default : return list;
-            }
+            ASCENDING, DESCENDING
+        }
+        public enum Country
+        {
+            INDIA, US
+        }
+        public static List<CensusDAO> SortCensusData(List<CensusDAO> list, string sortType, SortOrder sortOrder)
+        {
+            return sortOrder == SortOrder.ASCENDING ? list.OrderBy(c => c.GetType().GetField(sortType).GetValue(c)).ToList()
+                  : list.OrderByDescending(c => c.GetType().GetField(sortType).GetValue(c)).ToList();
         }
     }
 }

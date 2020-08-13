@@ -1,4 +1,10 @@
-﻿using CsvHelper.Configuration.Attributes;
+﻿/***************************************************************************
+ * @purpose : Indian Census class is used for getting and setting Data file
+ * @author  : Seema Balkrishna Rajpure
+ * @Date    : 11/08/2020
+ ***************************************************************************/
+
+using CsvHelper.Configuration.Attributes;
 
 namespace CensusAnalyserProblem
 {

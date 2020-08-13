@@ -15,7 +15,7 @@ namespace CensusAnalyserProblem
     {
         public static ICSVBuilder CreateCSVReader()
         {
-            return new CSVDataReader();
+            return new CensusDataAnalyser();
         }
     } 
 }
