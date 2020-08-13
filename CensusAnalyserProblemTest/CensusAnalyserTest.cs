@@ -164,7 +164,7 @@ namespace CensusAnalyserProblemTest
 
         //TC-4.2
         [Test]
-        public void GivenIndianDataCodeCSVFile_Whenloaded_ShouldReturnsTotalNumberOfRecords()
+        public void GivenIndianStateCodeCSVFile_Whenloaded_ShouldReturnsTotalNumberOfRecords()
         {
             Dictionary<object, CensusDAO> indianStateRecord = censusAdapter.LoadCensusData<IndianStateCode>(Country.INDIA, indianStateCodeHeader, indianStateCodeFile);
             string sortedList = censusAdapter.SortAndConvertCensusToJson(indianStateRecord, DTO.INDIA_STATE_CODE, SortBy.STATE_CODE, SortOrder.ASCENDING);
@@ -248,7 +248,7 @@ namespace CensusAnalyserProblemTest
 
         //TC-8.2
         [Test]
-        public void GivenUSCensusDataCSVFile_WhenFileNotExist_ShouldThrowFileNotFoundException()
+        public void GivenUSCensusCSVFile_WhenFileNotExist_ShouldThrowFileNotFoundException()
         {
             var customException = Assert.Throws<CensusAnalyserException>(() => censusAdapter.LoadCensusData<USCensus>(Country.US, usCensusDataHeaders, invalidUSCsvFilePath));
             Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, customException.type);
@@ -256,7 +256,7 @@ namespace CensusAnalyserProblemTest
 
         //TC-8.3
         [Test]
-        public void GivenUSCensusDataCSVFile_WhenFileFormatIsIncorrect_ShouldThrowIncorrectFileFormatException()
+        public void GivenUSCensusCSVFile_WhenFileFormatIsIncorrect_ShouldThrowIncorrectFileFormatException()
         {
             var customException = Assert.Throws<CensusAnalyserException>(() => censusAdapter.LoadCensusData<USCensus>(Country.US, usCensusDataHeaders, nonUSCSVFile));
             Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_FILE_FORMAT, customException.type);
@@ -291,12 +291,23 @@ namespace CensusAnalyserProblemTest
 
         //TC-9.2
         [Test]
-        public void GivenUsCensusCSVFileForSorting_WhenFileExist_ShouldReturnsLeastPopulousState()
+        public void GivenUsCensusCSVFile_Whensorted_ShouldReturnsLeastPopulousState()
         {
             Dictionary<object, CensusDAO> usRecord = censusAdapter.LoadCensusData<USCensus>(Country.US, usCensusDataHeaders, usCSVFilePath);
             string sortedList = censusAdapter.SortAndConvertCensusToJson(usRecord, DTO.US, SortBy.POPULATION, SortOrder.DESCENDING);
             List<USCensus> usCensusSortedList = JsonConvert.DeserializeObject<List<USCensus>>(sortedList);
             Assert.AreEqual("Wyoming", usCensusSortedList[usCensusSortedList.Count - 1].state);
+        }
+
+        //<--------------------UC-10-------------------->
+        //UC-10
+        [Test]
+        public void GivenUsCensusCSVFile_Whensorted_ShouldReturnsMostPopulousStateBasedOnPopulationDensity()
+        {
+            Dictionary<object, CensusDAO> usRecord = censusAdapter.LoadCensusData<USCensus>(Country.US, usCensusDataHeaders, usCSVFilePath);
+            string sortedList = censusAdapter.SortAndConvertCensusToJson(usRecord, DTO.US, SortBy.POPULATION_DENSITY, SortOrder.DESCENDING);
+            List<USCensus> usCensusSortedList = JsonConvert.DeserializeObject<List<USCensus>>(sortedList);
+            Assert.AreEqual("District of Columbia", usCensusSortedList[0].state);
         }
     }
 }
