@@ -277,5 +277,16 @@ namespace CensusAnalyserProblemTest
             var customException = Assert.Throws<CensusAnalyserException>(() => censusAdapter.LoadCensusData<USCensus>(Country.US, usCensusDataHeaders, wrongUSHeaderFile));
             Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_HEADER, customException.type);
         }
+
+        //<--------------------UC-9-------------------->
+        //TC-9.1
+        [Test]
+        public void GivenUsCensusCSVFile_Whensorted_ShouldReturnsMostPopulousState()
+        {
+            Dictionary<object, CensusDAO> usRecord = censusAdapter.LoadCensusData<USCensus>(Country.US, usCensusDataHeaders, usCSVFilePath);
+            string sortedList = censusAdapter.SortAndConvertCensusToJson(usRecord, SortBy.POPULATION, SortOrder.DESCENDING);
+            List<CensusDAO> usCensusSortedList = JsonConvert.DeserializeObject<List<CensusDAO>>(sortedList);
+            Assert.AreEqual("California", usCensusSortedList[0].state);
+        }
     }
 }
