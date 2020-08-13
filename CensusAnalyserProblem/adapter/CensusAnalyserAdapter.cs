@@ -25,5 +25,9 @@ namespace CensusAnalyserProblem
             var sortedList = SortingOrder.SortCensusData(dictionary.Select(x => x.Value).ToList(), sortField, sortOrder).Select(x => x.getDTO(dto, x)).ToList();
             return JsonConvert.SerializeObject(sortedList);
         }
+        public string GetMostPopulousStateBetweenBoth(IndianCensus indianCensus, USCensus usCensus)
+        {
+            return indianCensus.populationDensity > usCensus.populationDensity ? indianCensus.state : usCensus.state;
+        }
     }
 }

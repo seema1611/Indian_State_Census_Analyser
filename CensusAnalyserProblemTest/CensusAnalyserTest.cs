@@ -339,5 +339,22 @@ namespace CensusAnalyserProblemTest
             List<USCensus> usCensusSortedList = JsonConvert.DeserializeObject<List<USCensus>>(sortedList);
             Assert.AreEqual("District of Columbia", usCensusSortedList[usCensusSortedList.Count - 1].state);
         }
+
+
+        //<--------------------UC-11-------------------->
+        //TC-11.1
+        [Test]
+        public void GivenUsCensusAndIndianCensusCSVFile_WhenFileExist_ShouldReturnsMostPopulousState()
+        {
+            var usRecord = censusAdapter.LoadCensusData<USCensus>(Country.US, usCensusDataHeaders, usCSVFilePath);
+            string usSortedList = censusAdapter.SortAndConvertCensusToJson(usRecord, DTO.US, SortBy.POPULATION_DENSITY, SortOrder.DESCENDING);
+            List<USCensus> usCensusSortedList = JsonConvert.DeserializeObject<List<USCensus>>(usSortedList);
+
+            var indianStateRecord = censusAdapter.LoadCensusData<IndianCensus>(Country.INDIA, indianCensusDataHeaders, csvFilePath);
+            string sortedList = censusAdapter.SortAndConvertCensusToJson(indianStateRecord, DTO.INDIA_CENSUS, SortBy.POPULATION_DENSITY, SortOrder.DESCENDING);
+            List<IndianCensus> indianCensusSortedList = JsonConvert.DeserializeObject<List<IndianCensus>>(sortedList);
+
+            Assert.AreEqual("Bihar", censusAdapter.GetMostPopulousStateBetweenBoth(indianCensusSortedList[0], usCensusSortedList[0]));
+        }
     }
 }
