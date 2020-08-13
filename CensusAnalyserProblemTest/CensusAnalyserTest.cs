@@ -312,7 +312,7 @@ namespace CensusAnalyserProblemTest
 
         //UC-10.2
         [Test]
-        public void GivenUsCensusCSVFileForSorting_WhenFileExist_ShouldReturnsLeastPopulousStateBasedOnPopulationDensity()
+        public void GivenUsCensusCSVFile_Whensorted_ShouldReturnsLeastPopulousStateBasedOnPopulationDensity()
         {
             Dictionary<object, CensusDAO> usRecord = censusAdapter.LoadCensusData<USCensus>(Country.US, usCensusDataHeaders, usCSVFilePath);
             string sortedList = censusAdapter.SortAndConvertCensusToJson(usRecord, DTO.US, SortBy.POPULATION_DENSITY, SortOrder.DESCENDING);
@@ -322,12 +322,22 @@ namespace CensusAnalyserProblemTest
 
         //TC-10.3
         [Test]
-        public void GivenUsCensusCSVFileForSorting_WhenFileExist_ShouldReturnsMostPopulousStateBasedOnArea()
+        public void GivenUsCensusCSVFile_Whensorted_ShouldReturnsMostPopulousStateBasedOnArea()
         {
             Dictionary<object, CensusDAO> usRecord = censusAdapter.LoadCensusData<USCensus>(Country.US, usCensusDataHeaders, usCSVFilePath);
             string sortedList = censusAdapter.SortAndConvertCensusToJson(usRecord, DTO.US, SortBy.AREA_IN_SQ_KM, SortOrder.DESCENDING);
             List<USCensus> usCensusSortedList = JsonConvert.DeserializeObject<List<USCensus>>(sortedList);
             Assert.AreEqual("Alaska", usCensusSortedList[0].state);
+        }
+
+        //TC-10.4
+        [Test]
+        public void GivenUsCensusCSVFile_Whensorted_ShouldReturnsLeastPopulousStateBasedOnArea()
+        {
+            Dictionary<object, CensusDAO> usRecord = censusAdapter.LoadCensusData<USCensus>(Country.US, usCensusDataHeaders, usCSVFilePath);
+            string sortedList = censusAdapter.SortAndConvertCensusToJson(usRecord, DTO.US, SortBy.AREA_IN_SQ_KM, SortOrder.DESCENDING);
+            List<USCensus> usCensusSortedList = JsonConvert.DeserializeObject<List<USCensus>>(sortedList);
+            Assert.AreEqual("District of Columbia", usCensusSortedList[usCensusSortedList.Count - 1].state);
         }
     }
 }
